@@ -463,14 +463,29 @@
         secondCard = null;
         if (matched === pairsCount) onWin();
       } else {
-        startPenalty();
+        misses += 1;
+        missesEl.textContent = String(misses);
+        if (misses >= 2) {
+          startPenalty();
+        } else {
+          quickFlipBack();
+        }
       }
+    }
+
+    function quickFlipBack() {
+      lock = true;
+      setTimeout(() => {
+        if (firstCard) firstCard.classList.remove('flipped');
+        if (secondCard) secondCard.classList.remove('flipped');
+        firstCard = null;
+        secondCard = null;
+        lock = false;
+      }, 900);
     }
 
     function startPenalty() {
       lock = true;
-      misses += 1;
-      missesEl.textContent = String(misses);
       boardEl.classList.add('locked');
       let remaining = PENALTY_SECONDS;
       penaltyCountEl.textContent = String(remaining);
