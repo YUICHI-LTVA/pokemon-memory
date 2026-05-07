@@ -345,6 +345,7 @@
     let timerId = null;
     let startTs = 0;
     let penaltyTimerId = null;
+    const seenCards = new Set();
 
     function setDifficulty(n) {
       pairsCount = n;
@@ -422,6 +423,7 @@
         const card = document.createElement('div');
         card.className = 'card';
         card.dataset.pokemonId = String(c.id);
+        card.dataset.cardKey = c.key;
         card.setAttribute('role', 'button');
         card.setAttribute('aria-label', 'カード');
         card.innerHTML = `
@@ -463,9 +465,13 @@
         secondCard = null;
         if (matched === pairsCount) onWin();
       } else {
-        misses += 1;
-        missesEl.textContent = String(misses);
-        if (misses >= 2) {
+        const wasSeen = seenCards.has(firstCard.dataset.cardKey)
+          || seenCards.has(secondCard.dataset.cardKey);
+        seenCards.add(firstCard.dataset.cardKey);
+        seenCards.add(secondCard.dataset.cardKey);
+        if (wasSeen) {
+          misses += 1;
+          missesEl.textContent = String(misses);
           startPenalty();
         } else {
           quickFlipBack();
@@ -525,6 +531,7 @@
       moves = 0;
       matched = 0;
       misses = 0;
+      seenCards.clear();
       firstCard = null;
       secondCard = null;
       lock = false;
