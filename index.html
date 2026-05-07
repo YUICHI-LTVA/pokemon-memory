@@ -236,6 +236,32 @@
     margin-top: 12px;
   }
 
+  .penalty {
+    margin: 0 auto 14px;
+    max-width: 360px;
+    text-align: center;
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(239, 83, 80, 0.18);
+    animation: penalty-pulse 0.6s ease-in-out infinite alternate;
+  }
+  .penalty[hidden] { display: none; }
+  .penalty-icon { font-size: 18px; }
+  @keyframes penalty-pulse {
+    from { transform: scale(1); }
+    to { transform: scale(1.03); }
+  }
+  .board.locked { pointer-events: none; }
+
   @media (max-width: 480px) {
     h1 { font-size: 22px; }
     .board { gap: 6px; }
@@ -264,8 +290,14 @@
         <span>手数: <b id="moves">0</b></span>
         <span>ペア: <b id="pairs">0</b> / <b id="totalPairs">6</b></span>
         <span>タイム: <b id="time">0:00</b></span>
+        <span>お手つき: <b id="misses">0</b></span>
       </div>
       <button id="reset">リセット</button>
+    </div>
+
+    <div id="penalty" class="penalty" hidden>
+      <span class="penalty-icon">⛔</span>
+      <span>お手つき！ <b id="penaltyCount">10</b> 秒停止中...</span>
     </div>
 
     <div id="boardArea">
@@ -292,7 +324,11 @@
     const pairsEl = document.getElementById('pairs');
     const totalPairsEl = document.getElementById('totalPairs');
     const timeEl = document.getElementById('time');
+    const missesEl = document.getElementById('misses');
+    const penaltyEl = document.getElementById('penalty');
+    const penaltyCountEl = document.getElementById('penaltyCount');
     const errorEl = document.getElementById('error');
+    const PENALTY_SECONDS = 10;
     const resetBtn = document.getElementById('reset');
     const playAgainBtn = document.getElementById('playAgain');
     const winBanner = document.getElementById('winBanner');
@@ -305,8 +341,10 @@
     let lock = false;
     let moves = 0;
     let matched = 0;
+    let misses = 0;
     let timerId = null;
     let startTs = 0;
+    let penaltyTimerId = null;
 
     function setDifficulty(n) {
       pairsCount = n;
@@ -425,21 +463,40 @@
         secondCard = null;
         if (matched === pairsCount) onWin();
       } else {
-        lock = true;
-        setTimeout(() => {
-          firstCard.classList.remove('flipped');
-          secondCard.classList.remove('flipped');
-          firstCard = null;
-          secondCard = null;
-          lock = false;
-        }, 900);
+        startPenalty();
       }
+    }
+
+    function startPenalty() {
+      lock = true;
+      misses += 1;
+      missesEl.textContent = String(misses);
+      boardEl.classList.add('locked');
+      let remaining = PENALTY_SECONDS;
+      penaltyCountEl.textContent = String(remaining);
+      penaltyEl.hidden = false;
+      penaltyTimerId = setInterval(() => {
+        remaining -= 1;
+        penaltyCountEl.textContent = String(remaining);
+        if (remaining <= 0) endPenalty();
+      }, 1000);
+    }
+
+    function endPenalty() {
+      if (penaltyTimerId) { clearInterval(penaltyTimerId); penaltyTimerId = null; }
+      penaltyEl.hidden = true;
+      boardEl.classList.remove('locked');
+      if (firstCard) firstCard.classList.remove('flipped');
+      if (secondCard) secondCard.classList.remove('flipped');
+      firstCard = null;
+      secondCard = null;
+      lock = false;
     }
 
     function onWin() {
       stopTimer();
       const elapsed = timeEl.textContent;
-      winSummary.textContent = `手数 ${moves} 回 / タイム ${elapsed} でクリア！`;
+      winSummary.textContent = `手数 ${moves} 回 / お手つき ${misses} 回 / タイム ${elapsed} でクリア！`;
       winBanner.style.display = 'block';
     }
 
@@ -447,14 +504,19 @@
       errorEl.textContent = '';
       winBanner.style.display = 'none';
       stopTimer();
+      if (penaltyTimerId) { clearInterval(penaltyTimerId); penaltyTimerId = null; }
+      penaltyEl.hidden = true;
+      boardEl.classList.remove('locked');
       moves = 0;
       matched = 0;
+      misses = 0;
       firstCard = null;
       secondCard = null;
       lock = false;
       movesEl.textContent = '0';
       pairsEl.textContent = '0';
       timeEl.textContent = '0:00';
+      missesEl.textContent = '0';
       boardEl.style.display = 'none';
       loadingEl.style.display = 'block';
 
