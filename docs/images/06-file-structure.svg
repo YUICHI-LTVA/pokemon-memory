@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480" font-family="-apple-system, 'Hiragino Sans', sans-serif">
+  <defs>
+    <filter id="sh4"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dy="2" result="o"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="900" height="480" fill="#f9fafb"/>
+  <text x="450" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937">中身は1ファイルだけ — index.html の構造</text>
+  <text x="450" y="62" text-anchor="middle" font-size="13" fill="#6b7280">HTML / CSS / JavaScript が同じファイルに同居。ビルド作業もサーバープログラムも不要。</text>
+
+  <!-- File representation -->
+  <g filter="url(#sh4)" transform="translate(180 100)">
+    <rect width="540" height="350" rx="14" fill="#fff" stroke="#e5e7eb" stroke-width="1.5"/>
+    <rect width="540" height="38" rx="14" fill="#1f2937"/>
+    <circle cx="20" cy="19" r="5" fill="#ef4444"/>
+    <circle cx="36" cy="19" r="5" fill="#f59e0b"/>
+    <circle cx="52" cy="19" r="5" fill="#10b981"/>
+    <text x="270" y="24" text-anchor="middle" font-size="12" fill="#fff" font-family="monospace">index.html</text>
+
+    <!-- HTML section -->
+    <rect x="20" y="60" width="500" height="80" rx="8" fill="#fff7ed" stroke="#f97316" stroke-width="1.5"/>
+    <text x="35" y="80" font-size="12" font-weight="700" fill="#c2410c">🏗️ HTML（骨組み）</text>
+    <text x="35" y="100" font-size="11" fill="#374151" font-family="monospace">&lt;h1&gt; タイトル &lt;/h1&gt;</text>
+    <text x="35" y="116" font-size="11" fill="#374151" font-family="monospace">&lt;button&gt; かんたん / ふつう / むずかしい &lt;/button&gt;</text>
+    <text x="35" y="132" font-size="11" fill="#374151" font-family="monospace">&lt;div id="board"&gt; ←ここにカードが並ぶ &lt;/div&gt;</text>
+
+    <!-- CSS section -->
+    <rect x="20" y="150" width="500" height="80" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+    <text x="35" y="170" font-size="12" font-weight="700" fill="#1d4ed8">🎨 CSS（見た目）</text>
+    <text x="35" y="190" font-size="11" fill="#374151" font-family="monospace">.card { aspect-ratio: 3/4; ... } ← カードの形</text>
+    <text x="35" y="206" font-size="11" fill="#374151" font-family="monospace">.card.flipped { transform: rotateY(180deg) } ← めくりアニメ</text>
+    <text x="35" y="222" font-size="11" fill="#374151" font-family="monospace">.penalty { animation: penalty-pulse ... } ← お手つき表示</text>
+
+    <!-- JS section -->
+    <rect x="20" y="240" width="500" height="100" rx="8" fill="#fefce8" stroke="#eab308" stroke-width="1.5"/>
+    <text x="35" y="260" font-size="12" font-weight="700" fill="#a16207">⚙️ JavaScript（動き）</text>
+    <text x="35" y="280" font-size="11" fill="#374151" font-family="monospace">fetchPokemon(id)  ← PokeAPIにポケモンを聞きに行く</text>
+    <text x="35" y="296" font-size="11" fill="#374151" font-family="monospace">buildBoard()      ← カードを画面に並べる</text>
+    <text x="35" y="312" font-size="11" fill="#374151" font-family="monospace">checkPair()       ← 同じか判定する</text>
+    <text x="35" y="328" font-size="11" fill="#374151" font-family="monospace">startPenalty()    ← お手つきで10秒止める</text>
+  </g>
+
+  <text x="450" y="467" text-anchor="middle" font-size="11" fill="#9ca3af">合計約500行のテキスト。エディタで開けばすべて読めます。</text>
+</svg>

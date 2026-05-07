@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="-apple-system, 'Hiragino Sans', sans-serif">
+  <defs>
+    <filter id="sh"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dy="2" result="o"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="900" height="420" fill="#f9fafb"/>
+  <text x="450" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937">Webサイトの3兄弟（家を建てるのに例えると…）</text>
+
+  <!-- HTML -->
+  <g filter="url(#sh)" transform="translate(80 90)">
+    <rect width="220" height="260" rx="16" fill="#fff" stroke="#f97316" stroke-width="3"/>
+    <rect width="220" height="56" rx="16" fill="#f97316"/>
+    <text x="110" y="36" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">HTML</text>
+    <text x="110" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2937">🏗️ 骨組み</text>
+    <text x="110" y="120" text-anchor="middle" font-size="11" fill="#374151">家でいうと「柱と壁」</text>
+    <text x="110" y="156" text-anchor="middle" font-size="11" fill="#6b7280">どこに何があるかを</text>
+    <text x="110" y="172" text-anchor="middle" font-size="11" fill="#6b7280">紙に書いた設計図</text>
+    <text x="110" y="208" text-anchor="middle" font-size="10" fill="#9ca3af">「ここにボタン」</text>
+    <text x="110" y="222" text-anchor="middle" font-size="10" fill="#9ca3af">「ここに画像」</text>
+    <text x="110" y="236" text-anchor="middle" font-size="10" fill="#9ca3af">のように要素を配置</text>
+  </g>
+
+  <!-- CSS -->
+  <g filter="url(#sh)" transform="translate(340 90)">
+    <rect width="220" height="260" rx="16" fill="#fff" stroke="#3b82f6" stroke-width="3"/>
+    <rect width="220" height="56" rx="16" fill="#3b82f6"/>
+    <text x="110" y="36" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">CSS</text>
+    <text x="110" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2937">🎨 見た目</text>
+    <text x="110" y="120" text-anchor="middle" font-size="11" fill="#374151">家でいうと「内装と塗装」</text>
+    <text x="110" y="156" text-anchor="middle" font-size="11" fill="#6b7280">色・サイズ・余白・</text>
+    <text x="110" y="172" text-anchor="middle" font-size="11" fill="#6b7280">アニメーションを決める</text>
+    <text x="110" y="208" text-anchor="middle" font-size="10" fill="#9ca3af">背景のグラデーション</text>
+    <text x="110" y="222" text-anchor="middle" font-size="10" fill="#9ca3af">カードがめくれる動き</text>
+    <text x="110" y="236" text-anchor="middle" font-size="10" fill="#9ca3af">ボタンの丸み</text>
+  </g>
+
+  <!-- JS -->
+  <g filter="url(#sh)" transform="translate(600 90)">
+    <rect width="220" height="260" rx="16" fill="#fff" stroke="#eab308" stroke-width="3"/>
+    <rect width="220" height="56" rx="16" fill="#eab308"/>
+    <text x="110" y="36" text-anchor="middle" font-size="22" font-weight="800" fill="#fff">JavaScript</text>
+    <text x="110" y="92" text-anchor="middle" font-size="14" font-weight="700" fill="#1f2937">⚙️ 動き</text>
+    <text x="110" y="120" text-anchor="middle" font-size="11" fill="#374151">家でいうと「家電と配線」</text>
+    <text x="110" y="156" text-anchor="middle" font-size="11" fill="#6b7280">クリックされたら何をする？</text>
+    <text x="110" y="172" text-anchor="middle" font-size="11" fill="#6b7280">という「行動ルール」を書く</text>
+    <text x="110" y="208" text-anchor="middle" font-size="10" fill="#9ca3af">PokeAPI からデータ取得</text>
+    <text x="110" y="222" text-anchor="middle" font-size="10" fill="#9ca3af">ペアか判定 / タイマー</text>
+    <text x="110" y="236" text-anchor="middle" font-size="10" fill="#9ca3af">お手つきの10秒停止</text>
+  </g>
+
+  <text x="450" y="395" text-anchor="middle" font-size="12" fill="#6b7280">この3つが揃って初めて「動くWebアプリ」になります。今回は全部 1つの index.html ファイルに同居させています。</text>
+</svg>

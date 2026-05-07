@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 580" font-family="-apple-system, 'Hiragino Sans', sans-serif">
+  <defs>
+    <filter id="sh2"><feGaussianBlur in="SourceAlpha" stdDeviation="2"/><feOffset dy="2" result="o"/><feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer><feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arr2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#374151"/>
+    </marker>
+  </defs>
+  <rect width="900" height="580" fill="#fefce8"/>
+  <text x="450" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#1f2937">ゲームの流れ（プレイヤーがカードを2枚めくった時）</text>
+
+  <!-- Start -->
+  <g filter="url(#sh2)">
+    <rect x="370" y="70" width="160" height="50" rx="25" fill="#10b981"/>
+    <text x="450" y="100" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">▶ ゲーム開始</text>
+  </g>
+  <line x1="450" y1="120" x2="450" y2="155" stroke="#374151" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Pick first -->
+  <g filter="url(#sh2)">
+    <rect x="320" y="160" width="260" height="60" rx="10" fill="#fff" stroke="#374151" stroke-width="1.5"/>
+    <text x="450" y="184" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937">1枚目のカードをめくる</text>
+    <text x="450" y="204" text-anchor="middle" font-size="11" fill="#6b7280">タイマーが動き出す</text>
+  </g>
+  <line x1="450" y1="220" x2="450" y2="250" stroke="#374151" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Pick second -->
+  <g filter="url(#sh2)">
+    <rect x="320" y="255" width="260" height="60" rx="10" fill="#fff" stroke="#374151" stroke-width="1.5"/>
+    <text x="450" y="279" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937">2枚目のカードをめくる</text>
+    <text x="450" y="299" text-anchor="middle" font-size="11" fill="#6b7280">手数 +1</text>
+  </g>
+  <line x1="450" y1="315" x2="450" y2="345" stroke="#374151" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Decision -->
+  <g filter="url(#sh2)">
+    <polygon points="450,350 600,400 450,450 300,400" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+    <text x="450" y="395" text-anchor="middle" font-size="13" font-weight="700" fill="#1f2937">同じポケモン？</text>
+    <text x="450" y="412" text-anchor="middle" font-size="11" fill="#6b7280">（ペアになっている？）</text>
+  </g>
+
+  <!-- Yes path: match -->
+  <line x1="600" y1="400" x2="700" y2="400" stroke="#10b981" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="650" y="394" text-anchor="middle" font-size="12" font-weight="700" fill="#10b981">YES</text>
+  <g filter="url(#sh2)">
+    <rect x="700" y="370" width="170" height="60" rx="10" fill="#d1fae5" stroke="#10b981" stroke-width="2"/>
+    <text x="785" y="394" text-anchor="middle" font-size="13" font-weight="700" fill="#065f46">✓ ペア成立</text>
+    <text x="785" y="414" text-anchor="middle" font-size="11" fill="#065f46">カードが黄色に</text>
+  </g>
+
+  <!-- No path: was seen? -->
+  <line x1="300" y1="400" x2="200" y2="400" stroke="#ef4444" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="250" y="394" text-anchor="middle" font-size="12" font-weight="700" fill="#ef4444">NO</text>
+  <g filter="url(#sh2)">
+    <polygon points="100,400 200,365 200,435" fill="#fee2e2" stroke="#ef4444" stroke-width="2"/>
+  </g>
+  <g filter="url(#sh2)">
+    <rect x="20" y="450" width="180" height="80" rx="10" fill="#fff" stroke="#374151" stroke-width="1.5"/>
+    <text x="110" y="470" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937">どちらかが</text>
+    <text x="110" y="486" text-anchor="middle" font-size="11" font-weight="700" fill="#1f2937">既出（前に見た）？</text>
+    <text x="110" y="510" text-anchor="middle" font-size="10" fill="#6b7280">これが「お手つき」判定</text>
+  </g>
+  <line x1="150" y1="400" x2="150" y2="448" stroke="#374151" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <!-- Penalty -->
+  <g filter="url(#sh2)">
+    <rect x="225" y="450" width="200" height="80" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+    <text x="325" y="470" text-anchor="middle" font-size="13" font-weight="700" fill="#b91c1c">⛔ お手つき！</text>
+    <text x="325" y="490" text-anchor="middle" font-size="11" fill="#7f1d1d">10秒停止</text>
+    <text x="325" y="510" text-anchor="middle" font-size="10" fill="#9ca3af">画面上部にカウントダウン</text>
+  </g>
+  <line x1="200" y1="490" x2="222" y2="490" stroke="#374151" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="211" y="482" text-anchor="middle" font-size="10" font-weight="700" fill="#ef4444">YES</text>
+
+  <g filter="url(#sh2)">
+    <rect x="450" y="450" width="200" height="80" rx="10" fill="#fff" stroke="#9ca3af" stroke-width="1.5"/>
+    <text x="550" y="470" text-anchor="middle" font-size="13" font-weight="700" fill="#374151">普通に裏返す</text>
+    <text x="550" y="490" text-anchor="middle" font-size="11" fill="#6b7280">0.9秒で次のターンへ</text>
+    <text x="550" y="510" text-anchor="middle" font-size="10" fill="#9ca3af">（ペナルティなし）</text>
+  </g>
+  <line x1="200" y1="500" x2="448" y2="500" stroke="#374151" stroke-width="2" marker-end="url(#arr2)"/>
+  <text x="430" y="495" text-anchor="middle" font-size="10" font-weight="700" fill="#374151">NO</text>
+
+  <!-- Match continues to next turn -->
+  <line x1="785" y1="430" x2="785" y2="465" stroke="#374151" stroke-width="2"/>
+  <line x1="785" y1="465" x2="450" y2="465" stroke="#374151" stroke-width="2" marker-end="url(#arr2)"/>
+
+  <text x="450" y="558" text-anchor="middle" font-size="11" fill="#6b7280">＊全ペア成立で「🎉 クリア！」のお祝いバナーが出ます</text>
+</svg>
