@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ポケモン神経衰弱</title>
+<style>
+  :root {
+    --bg-grad-1: #fef3c7;
+    --bg-grad-2: #fce7f3;
+    --bg-grad-3: #dbeafe;
+    --card-back: #ef5350;
+    --card-back-2: #d84343;
+    --card-front: #ffffff;
+    --primary: #ef5350;
+    --primary-hover: #d84343;
+    --text: #1f2937;
+    --muted: #6b7280;
+    --matched: #fde68a;
+    --matched-border: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP", sans-serif;
+    background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 50%, var(--bg-grad-3) 100%);
+    color: var(--text);
+    padding: 24px 16px 48px;
+  }
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: 26px;
+    margin: 0 0 6px;
+    letter-spacing: 0.02em;
+  }
+  .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin: 0;
+  }
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+    margin: 16px 0 20px;
+  }
+  .stats {
+    display: flex;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 10px 18px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .stats span b { color: var(--primary); }
+  .difficulty {
+    display: flex;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 4px;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  .difficulty button {
+    background: transparent;
+    color: var(--text);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: none;
+  }
+  .difficulty button.active {
+    background: var(--primary);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(239, 83, 80, 0.35);
+  }
+  button {
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    background: var(--primary);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 6px 16px rgba(239, 83, 80, 0.35);
+    transition: transform 0.1s, background 0.2s;
+  }
+  button:hover { background: var(--primary-hover); }
+  button:active { transform: scale(0.97); }
+  button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+  .board {
+    display: grid;
+    gap: 10px;
+    perspective: 1000px;
+  }
+  .board.cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .board.cols-5 { grid-template-columns: repeat(5, 1fr); }
+  .board.cols-6 { grid-template-columns: repeat(6, 1fr); }
+
+  .card {
+    position: relative;
+    aspect-ratio: 3 / 4;
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.3, 1);
+  }
+  .card.flipped, .card.matched { transform: rotateY(180deg); }
+  .card.matched { cursor: default; }
+  .card.disabled { cursor: default; }
+
+  .face {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  }
+  .back {
+    background: linear-gradient(160deg, var(--card-back) 0%, var(--card-back-2) 100%);
+    color: #fff;
+    font-weight: 800;
+    font-size: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .back::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 14%;
+    background: #fff;
+    transform: translateY(-50%);
+  }
+  .back::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 38%; aspect-ratio: 1;
+    background: #fff;
+    border: 5px solid #1f2937;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: inset 0 0 0 5px var(--card-back);
+  }
+
+  .front {
+    background: var(--card-front);
+    transform: rotateY(180deg);
+    padding: 6px;
+    overflow: hidden;
+  }
+  .card.matched .front {
+    background: var(--matched);
+    outline: 3px solid var(--matched-border);
+    outline-offset: -3px;
+  }
+  .front img {
+    width: 100%;
+    flex: 1;
+    object-fit: contain;
+    image-rendering: auto;
+    pointer-events: none;
+  }
+  .front .name {
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text);
+    line-height: 1.2;
+    padding: 2px 0 4px;
+    word-break: keep-all;
+  }
+
+  .loading-overlay {
+    text-align: center;
+    padding: 40px 16px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .spinner {
+    width: 32px; height: 32px;
+    margin: 0 auto 12px;
+    border: 3px solid #e5e7eb;
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .win-banner {
+    margin: 20px auto 0;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  }
+  .win-banner h2 {
+    margin: 0 0 6px;
+    color: var(--primary);
+    font-size: 22px;
+  }
+  .win-banner p {
+    margin: 0 0 12px;
+    color: var(--text);
+    font-size: 14px;
+  }
+  .error {
+    color: var(--primary);
+    font-size: 14px;
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 22px; }
+    .board { gap: 6px; }
+    .front .name { font-size: 10px; }
+    .back { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>🎴 ポケモン神経衰弱</h1>
+      <p class="subtitle">同じポケモンのペアを見つけよう！</p>
+    </header>
+
+    <div class="toolbar">
+      <div class="difficulty" role="group" aria-label="難易度">
+        <button data-pairs="6" class="active">かんたん (6ペア)</button>
+        <button data-pairs="10">ふつう (10ペア)</button>
+        <button data-pairs="15">むずかしい (15ペア)</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="stats">
+        <span>手数: <b id="moves">0</b></span>
+        <span>ペア: <b id="pairs">0</b> / <b id="totalPairs">6</b></span>
+        <span>タイム: <b id="time">0:00</b></span>
+      </div>
+      <button id="reset">リセット</button>
+    </div>
+
+    <div id="boardArea">
+      <div class="loading-overlay" id="loading">
+        <div class="spinner"></div>
+        <div>ポケモンを召喚中...</div>
+      </div>
+      <div class="board" id="board" style="display:none;"></div>
+    </div>
+
+    <div class="error" id="error"></div>
+    <div class="win-banner" id="winBanner" style="display:none;">
+      <h2>🎉 クリア！</h2>
+      <p id="winSummary"></p>
+      <button id="playAgain">もう一度</button>
+    </div>
+  </div>
+
+  <script>
+    const MAX_POKEMON_ID = 1025;
+    const boardEl = document.getElementById('board');
+    const loadingEl = document.getElementById('loading');
+    const movesEl = document.getElementById('moves');
+    const pairsEl = document.getElementById('pairs');
+    const totalPairsEl = document.getElementById('totalPairs');
+    const timeEl = document.getElementById('time');
+    const errorEl = document.getElementById('error');
+    const resetBtn = document.getElementById('reset');
+    const playAgainBtn = document.getElementById('playAgain');
+    const winBanner = document.getElementById('winBanner');
+    const winSummary = document.getElementById('winSummary');
+    const difficultyBtns = document.querySelectorAll('.difficulty button');
+
+    let pairsCount = 6;
+    let firstCard = null;
+    let secondCard = null;
+    let lock = false;
+    let moves = 0;
+    let matched = 0;
+    let timerId = null;
+    let startTs = 0;
+
+    function setDifficulty(n) {
+      pairsCount = n;
+      difficultyBtns.forEach(b => b.classList.toggle('active', Number(b.dataset.pairs) === n));
+      boardEl.classList.remove('cols-4', 'cols-5', 'cols-6');
+      boardEl.classList.add(n === 6 ? 'cols-4' : n === 10 ? 'cols-5' : 'cols-6');
+      totalPairsEl.textContent = String(n);
+    }
+
+    difficultyBtns.forEach(b => {
+      b.addEventListener('click', () => {
+        setDifficulty(Number(b.dataset.pairs));
+        startGame();
+      });
+    });
+
+    function pickJaName(names) {
+      const ja = names.find(n => n.language.name === 'ja');
+      const jaHrkt = names.find(n => n.language.name === 'ja-Hrkt');
+      return (ja || jaHrkt)?.name || null;
+    }
+
+    function pickRandomIds(count) {
+      const ids = new Set();
+      while (ids.size < count) {
+        ids.add(Math.floor(Math.random() * MAX_POKEMON_ID) + 1);
+      }
+      return [...ids];
+    }
+
+    function shuffle(arr) {
+      const a = arr.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    async function fetchPokemon(id) {
+      const [pRes, sRes] = await Promise.all([
+        fetch(`https://pokeapi.co/api/v2/pokemon/${id}`),
+        fetch(`https://pokeapi.co/api/v2/pokemon-species/${id}`)
+      ]);
+      if (!pRes.ok || !sRes.ok) throw new Error('PokeAPI error');
+      const [data, species] = await Promise.all([pRes.json(), sRes.json()]);
+      const artwork = data.sprites.other?.['official-artwork']?.front_default
+        || data.sprites.front_default;
+      const jaName = pickJaName(species.names) || data.name;
+      return { id, name: jaName, image: artwork };
+    }
+
+    function startTimer() {
+      stopTimer();
+      startTs = Date.now();
+      timeEl.textContent = '0:00';
+      timerId = setInterval(() => {
+        const s = Math.floor((Date.now() - startTs) / 1000);
+        const m = Math.floor(s / 60);
+        const r = s % 60;
+        timeEl.textContent = `${m}:${String(r).padStart(2, '0')}`;
+      }, 1000);
+    }
+    function stopTimer() {
+      if (timerId) { clearInterval(timerId); timerId = null; }
+    }
+
+    function buildBoard(pokemonList) {
+      boardEl.innerHTML = '';
+      const cards = shuffle(pokemonList.flatMap(p => [
+        { ...p, key: `${p.id}-a` },
+        { ...p, key: `${p.id}-b` },
+      ]));
+      cards.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.dataset.pokemonId = String(c.id);
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', 'カード');
+        card.innerHTML = `
+          <div class="face back" aria-hidden="true">?</div>
+          <div class="face front">
+            <img src="${c.image}" alt="${c.name}" loading="lazy">
+            <div class="name">${c.name}</div>
+          </div>
+        `;
+        card.addEventListener('click', () => onCardClick(card));
+        boardEl.appendChild(card);
+      });
+    }
+
+    function onCardClick(card) {
+      if (lock) return;
+      if (card.classList.contains('flipped') || card.classList.contains('matched')) return;
+      card.classList.add('flipped');
+      if (!firstCard) {
+        firstCard = card;
+        if (moves === 0 && matched === 0) startTimer();
+        return;
+      }
+      secondCard = card;
+      moves += 1;
+      movesEl.textContent = String(moves);
+      checkPair();
+    }
+
+    function checkPair() {
+      const a = firstCard.dataset.pokemonId;
+      const b = secondCard.dataset.pokemonId;
+      if (a === b) {
+        firstCard.classList.add('matched');
+        secondCard.classList.add('matched');
+        matched += 1;
+        pairsEl.textContent = String(matched);
+        firstCard = null;
+        secondCard = null;
+        if (matched === pairsCount) onWin();
+      } else {
+        lock = true;
+        setTimeout(() => {
+          firstCard.classList.remove('flipped');
+          secondCard.classList.remove('flipped');
+          firstCard = null;
+          secondCard = null;
+          lock = false;
+        }, 900);
+      }
+    }
+
+    function onWin() {
+      stopTimer();
+      const elapsed = timeEl.textContent;
+      winSummary.textContent = `手数 ${moves} 回 / タイム ${elapsed} でクリア！`;
+      winBanner.style.display = 'block';
+    }
+
+    async function startGame() {
+      errorEl.textContent = '';
+      winBanner.style.display = 'none';
+      stopTimer();
+      moves = 0;
+      matched = 0;
+      firstCard = null;
+      secondCard = null;
+      lock = false;
+      movesEl.textContent = '0';
+      pairsEl.textContent = '0';
+      timeEl.textContent = '0:00';
+      boardEl.style.display = 'none';
+      loadingEl.style.display = 'block';
+
+      try {
+        const ids = pickRandomIds(pairsCount);
+        const pokemons = await Promise.all(ids.map(fetchPokemon));
+        const valid = pokemons.filter(p => p.image);
+        if (valid.length < pairsCount) {
+          throw new Error('画像のないポケモンが含まれていました。もう一度お試しを。');
+        }
+        buildBoard(valid);
+        loadingEl.style.display = 'none';
+        boardEl.style.display = 'grid';
+      } catch (err) {
+        loadingEl.style.display = 'none';
+        errorEl.textContent = `読み込みに失敗しました: ${err.message}`;
+      }
+    }
+
+    resetBtn.addEventListener('click', startGame);
+    playAgainBtn.addEventListener('click', startGame);
+
+    setDifficulty(6);
+    startGame();
+  </script>
+</body>
+</html>
